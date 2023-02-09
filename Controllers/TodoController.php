@@ -2,6 +2,13 @@
 
 class TodoController extends Controller
 {
+    private Todo $todo;
+    public function __construct()
+    {
+        $this->loadModel('Todo');
+        $this->todo = new Todo;
+    }
+
     public function index()
     {
         $title = 'TodoList';
