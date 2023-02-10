@@ -1,4 +1,5 @@
 <?php
+require "./Models/Model.php";
 
 class Controller
 {
@@ -9,7 +10,7 @@ class Controller
        return $this->view('welcome');
     }
 
-    public function view($viewPath, array $data = [])
+    public function view($viewPath, array $data = []): void
     {
         foreach ($data as $key => $value) {
             $$key = $value;
@@ -18,7 +19,8 @@ class Controller
         require ($viewPath);
     }
 
-    public function loadModel($modelPath) {
+    public function loadModel($modelPath): void
+    {
         $modelPath = self::MODEL_FOLDER_NAME .'/'. $modelPath .'.php';
         require ($modelPath);
     }
