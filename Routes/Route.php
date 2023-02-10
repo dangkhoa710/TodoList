@@ -1,6 +1,7 @@
 <?php
 require "./Controllers/Controller.php";
 
+
 $controllerName = ucfirst((strtolower($_REQUEST['controller'] ?? '')) . 'Controller');
 $actionName = strtolower($_REQUEST['action'] ?? 'index');
 
