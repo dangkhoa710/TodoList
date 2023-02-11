@@ -252,8 +252,7 @@
         $('.done').on('click', function(e) {
             e.stopPropagation();
             var id = $(this).parent().parent().parent().attr('id');
-            var id_status = $("#status-"+id).val() == 3 ? 2 : 3;
-            console.log(id_status);
+            var id_status = $("#status-"+id).val() == 'Done' ? 2 : 3;
             $.ajax({
                 type: 'GET',
                 url: 'http://localhost/TodoList/?controller=todo&action=done&id='+id+'&id_status='+id_status,
@@ -263,12 +262,14 @@
                         if($(".todo-id-"+id).hasClass('bg-done'))
                         {
                             $(".todo-id-"+id).removeClass('bg-done');
+                            $("#status-"+id).val('Planning')
                         }
                         else
                         {
                             $(".todo-id-"+id).addClass('bg-done');
+                            $("#status-"+id).val('Done')
                         }
-                        $("#status-"+id).val(id_status)
+
                     }
                     else
                     {
