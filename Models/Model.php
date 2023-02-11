@@ -79,12 +79,10 @@ class Model extends Database
 
     public function update($table, $data, $id): mysqli_result|bool
     {
-
         $dataUpdate = [];
         foreach ($data as $key => $value) {
             $dataUpdate[] = "${key} = '" . $value . "'";
         }
-
         $inSql = implode(',', $dataUpdate);
         $sql = "UPDATE $table SET $inSql WHERE id = $id";
         return $this->query($sql);

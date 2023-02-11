@@ -84,7 +84,7 @@ class TodoController extends Controller
     {
         $data = [
             'name' => $_POST['name-update'],
-            'date' => $_POST['datepicker-update'],
+            'date' => date('Y-m-d', strtotime($_POST['datepicker-update'])),
             'content' => $_POST['content-update'],
             'id_status' => $_POST['status-update'],
             'updated_at' => date('Y-m-d H:i:s', time())
