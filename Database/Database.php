@@ -2,9 +2,9 @@
 
 class Database
 {
-    const HOST = '127.0.0.1';
+    const HOST = 'localhost';
     const USERNAME = 'root';
-    const PASSWORD = 'password';
+    const PASSWORD = '';
     const DB_NAME = 'todo';
     const PORT = '3306';
 

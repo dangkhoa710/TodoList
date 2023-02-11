@@ -53,23 +53,25 @@
             <?php
             $done = null;
             foreach ($works as $key => $work) {
-                $done = $work['id_status'] == 3 ? 'bg-done' : null;
-                echo '<div class="border rounded bg-light '.$done.' p-3 todo todo-id-' . $work['id'] . '" id="' . $work['id'] . '">
+                if($work['name'] != null) {
+                    $done = $work['id_status'] == 3 ? 'bg-done' : null;
+                    echo '<div class="border rounded bg-light ' . $done . ' p-3 todo todo-id-' . $work['id'] . '" id="' . $work['id'] . '">
                          <div class="row">
                             <div class="col-md-2 col-sm-1">
-                                <button class="btn btn-info done done-'.$work['id'].'">DONE</button>
+                                <button class="btn btn-info done done-' . $work['id'] . '">DONE</button>
                             </div>
                             <div class="col-md-5 col-sm-3">
                                 <span class="ml-2" id="name-' . $work['id'] . '"> ' . $work['name'] . '</span>
                             </div>
                             <div class="col-md-3 col-sm-4">
-                                <input type="text" class="form-control" id="exampleInputEmail1" value="' . $work['id_status'] . '" readonly>
+                                <input type="text" class="form-control" id="status-' . $work['id'] . '" value="' . $work['name_status'] . '" readonly>
                             </div>
                             <div class="col-md-2 col-sm-1">
                                 <button class="btn btn-danger btn-delete">DEL</button>
                             </div>
                         </div>
                     </div>';
+                }
             }
             ?>
             <div class="mt-3 ml-3" id="button-list-todo">
@@ -118,7 +120,7 @@
                         <option value=""></option>
                     <?php
                     foreach ($status as $key => $st) {
-                        echo '<option value="'.$st['id'].'">'.$st['name'].'</option>';
+                        echo '<option value="'.$st['id'].'">'.$st['name_status'].'</option>';
                     }
                     ?>
                     </select>
@@ -159,8 +161,8 @@
                             '<div class="border rounded bg-light p-3 todo todo-id-' + response.data['id'] +'" id="'+ response.data['id'] +'" onclick="detail('+response.data['id']+')">' +
                             '<div class="row"><div class="col-md-2 col-sm-1"><button class="btn btn-info">DONE</button>' +
                             '</div>' +
-                            '<div class="col-md-5 col-sm-3"><span class="ml-2"> '+ response.data['name']+'</span></div>' +
-                            '<div class="col-md-3 col-sm-3"><input type="text" class="form-control" id="exampleInputEmail1" value="'+response.data['id_status']+'" readonly></div>' +
+                            '<div class="col-md-5 col-sm-3"><span class="ml-2" id="name-'+ response.data['id']+'"> '+ response.data['name']+'</span></div>' +
+                            '<div class="col-md-3 col-sm-3"><input type="text" class="form-control" id="status-'+ response.data['id']+'" value="Planning" readonly></div>' +
                             '<div class="col-md-2 col-sm-1"><button class="btn btn-danger">DEL</button></div></div></div>').insertBefore("#button-list-todo");
                     }
                     else
@@ -183,6 +185,7 @@
             var id = $('#id-update').val();
             var name_update = $("#name-update").val();
             var id_status = $("#status-update").val();
+            var name_status = $("#status-update option:selected").text();
             $.ajax({
                 type: 'POST',
                 url: 'http://localhost/TodoList/?controller=todo&action=update&id='+id,
@@ -192,6 +195,7 @@
                     {
                         alert('success');
                         $("#name-"+id).text(name_update);
+                        $("#status-"+id).text(name_status);
                         if(id_status != 3)
                         {
                             $(".todo-id-"+id).removeClass('bg-done');
@@ -248,14 +252,23 @@
         $('.done').on('click', function(e) {
             e.stopPropagation();
             var id = $(this).parent().parent().parent().attr('id');
+            var id_status = $("#status-"+id).val() == 3 ? 2 : 3;
+            console.log(id_status);
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost/TodoList/?controller=todo&action=done&id='+id,
+                url: 'http://localhost/TodoList/?controller=todo&action=done&id='+id+'&id_status='+id_status,
                 success: function(response) {
                     if (response.status == 201)
                     {
-                        $(".todo-id-"+id).addClass('bg-done');
-
+                        if($(".todo-id-"+id).hasClass('bg-done'))
+                        {
+                            $(".todo-id-"+id).removeClass('bg-done');
+                        }
+                        else
+                        {
+                            $(".todo-id-"+id).addClass('bg-done');
+                        }
+                        $("#status-"+id).val(id_status)
                     }
                     else
                     {

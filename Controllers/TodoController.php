@@ -64,12 +64,21 @@ class TodoController extends Controller
 
     public function delete()
     {
-        $this->todo->deleteRecord($_GET['id']);
+        $data = [
+            'deleted_at' => date('Y-m-d H:i:s', time())
+        ];
         header('Content-Type: application/json');
+        if($this->todo->deleteRecord($data, $_GET['id']) !== true) {
+            echo json_encode([
+                'status' => 500,
+                'data' => null
+            ]);
+        }
         echo json_encode([
             'status' => 200,
             'data' => null
         ]);
+
     }
     public function update()
     {
@@ -97,7 +106,7 @@ class TodoController extends Controller
     public function done()
     {
         $data = [
-            'id_status' => 3,
+            'id_status' => $_GET['id_status'],
             'updated_at' => date('Y-m-d H:i:s', time())
         ];
         header('Content-Type: application/json');
